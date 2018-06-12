@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:inherited/class1.dart';
 import 'package:inherited/class2.dart';
+import 'package:inherited/count_bloc_provider.dart';
+import 'package:inherited/counter_block.dart';
 import 'package:inherited/counter_model.dart';
+import 'package:inherited/mycounter.dart';
 import 'package:random_pk/random_pk.dart';
 import 'package:scoped_model/scoped_model.dart';
 
@@ -29,8 +32,10 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    return ScopedModel(
-      model: CounterModel(),
+    var myCounter = new MyCounter(0);
+    CounterBloc bloc = CounterBloc();
+    return CountBlocProvider(
+      bloc: bloc,
       child: Scaffold(
           appBar: AppBar(
             title: Text(
@@ -53,16 +58,13 @@ class HomePageState extends State<HomePage> {
               ),
             ],
           )),
-          floatingActionButton: ScopedModelDescendant<CounterModel>(
-            rebuildOnChange: false,
-            builder: (context, _, model) => FloatingActionButton(
-                  child: RandomContainer(
-                    child: Icon(Icons.add),
-                  ),
-                  onPressed: () {
-                    model.add();
-                  },
-                ),
+          floatingActionButton: FloatingActionButton(
+            child: RandomContainer(
+              child: Icon(Icons.add),
+            ),
+            onPressed: () {
+              bloc.add.add(myCounter);
+            },
           )),
     );
   }
